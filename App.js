@@ -18,8 +18,10 @@ import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete'
 navigator.geolocation = require('@react-native-community/geolocation');
 const GOOGLE_PLACES_API_KEY = 'AIzaSyBefV0iljWcdxXDQ9rxhPkjrv-eXFR6pHk';
 function SearchScreen() {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [text, setText] = useState('Starting location');
+  const [modalVisible1, setModalVisible1] = useState(false);
+  const [modalVisible2, setModalVisible2] = useState(false);
+  const [start, setStart] = useState('Starting location');
+  const [distination, setDistination] = useState('distination');
   return (
     <View style={{flex: 1, backgroundColor: '#D1C4E9'}}>
       <ImageBackground
@@ -37,12 +39,12 @@ function SearchScreen() {
       <Modal
         animationType="slide"
         transparent={true}
-        visible={modalVisible}
+        visible={modalVisible1}
         onRequestClose={() => {
           Alert.alert('Modal has been closed.');
-          setModalVisible(!modalVisible);
+          setModalVisible1(!modalVisible1);
         }}>
-        <View style={styles.centeredView}>
+        <View>
           <View style={styles.modalView}>
             <GooglePlacesAutocomplete
               placeholder="Search"
@@ -53,7 +55,7 @@ function SearchScreen() {
               }}
               onPress={(data, details = null) => {
                 console.log(data.description);
-                setText(data.description);
+                setStart(data.description);
               }}
               onFail={error => console.error(error)}
               currentLocation={true}
@@ -61,8 +63,41 @@ function SearchScreen() {
             />
             <Pressable
               style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}>
-              <Text style={styles.textStyle}>Hide Modal</Text>
+              onPress={() => setModalVisible1(!modalVisible1)}>
+              <Text style={styles.textStyle}>OKEY</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible2}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible2(!modalVisible2);
+        }}>
+        <View>
+          <View style={styles.modalView}>
+            <GooglePlacesAutocomplete
+              placeholder="Search"
+              query={{
+                key: GOOGLE_PLACES_API_KEY,
+                language: 'en', // language of the results
+                components: 'country:in',
+              }}
+              onPress={(data, details = null) => {
+                console.log(data.description);
+                setDistination(data.description);
+              }}
+              onFail={error => console.error(error)}
+              currentLocation={true}
+              currentLocationLabel="Current location"
+            />
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible2(!modalVisible2)}>
+              <Text style={styles.textStyle}>OKEY</Text>
             </Pressable>
           </View>
         </View>
@@ -86,7 +121,7 @@ function SearchScreen() {
             backgroundColor: '#fff',
             justifyContent: 'space-between',
           }}>
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
+          <TouchableOpacity onPress={() => setModalVisible1(true)}>
             <Text
               style={{
                 borderBottomColor: 'gray',
@@ -94,10 +129,10 @@ function SearchScreen() {
                 marginTop: 25,
                 marginHorizontal: 15,
               }}>
-              {text}
+              {start}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
+          <TouchableOpacity onPress={() => setModalVisible2(true)}>
             <Text
               style={{
                 borderBottomColor: 'gray',
@@ -105,10 +140,10 @@ function SearchScreen() {
                 marginTop: 20,
                 marginHorizontal: 15,
               }}>
-              {/* {text} */}distination
+              {distination}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
+          <TouchableOpacity onPress={() => console.log('search press')}>
             <Text
               style={{
                 marginTop: 10,
@@ -198,8 +233,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#ecf0f1',
     borderRadius: 20,
     height: '100%',
+    width: '100%',
     padding: 35,
-    alignItems: 'center',
+    // alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -219,6 +255,8 @@ const styles = StyleSheet.create({
   },
   buttonClose: {
     backgroundColor: '#2196F3',
+    width: '50%',
+    alignSelf: 'center',
   },
   textStyle: {
     color: '#fff',
