@@ -4,7 +4,6 @@ import {
   Alert,
   Modal,
   StyleSheet,
-  TextInput,
   ImageBackground,
   Text,
   Pressable,

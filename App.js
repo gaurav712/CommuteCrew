@@ -36,7 +36,7 @@ export default function App() {
             return <Ionicons name={iconName} size={size} color={color} />;
           },
           tabBarActiveTintColor: '#00B0FF',
-          tabBarInactiveTintColor: 'gray',
+          tabBarInactiveTintColor: '#78909C',
           headerShown: false,
         })}>
         <Tab.Screen name="Search" component={SearchScreen} />
