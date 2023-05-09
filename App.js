@@ -8,7 +8,9 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import BaseAuth from './screens/Auth/BaseAuth';
 import Login from './screens/Auth/Login';
+import SignUp from './screens/Auth/SignUp';
 import {SafeAreaView, StatusBar} from 'react-native';
 
 const RootStack = createNativeStackNavigator();
@@ -53,8 +55,18 @@ const AuthNavigator = () => {
   return (
     <AuthStack.Navigator>
       <AuthStack.Screen
+        name="BaseAuth"
+        component={BaseAuth}
+        options={{headerShown: false}}
+      />
+      <AuthStack.Screen
         name="Login"
         component={Login}
+        options={{headerShown: false}}
+      />
+      <AuthStack.Screen
+        name="SignUp"
+        component={SignUp}
         options={{headerShown: false}}
       />
     </AuthStack.Navigator>
