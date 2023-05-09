@@ -30,11 +30,10 @@ const SignUp = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'red',
   },
   coverContainer: {
     position: 'absolute',
-    top: -10,
+    top: -15,
     right: 0,
     left: -10,
   },

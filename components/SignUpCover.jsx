@@ -2,6 +2,8 @@ import * as React from 'react';
 import {Dimensions, Keyboard, StyleSheet, Text} from 'react-native';
 import Svg, {Path} from 'react-native-svg';
 
+const dim = Dimensions.get('window');
+
 const SignUpCover = props => {
   const [isKeyboardVisible, setKeyboardVisible] = React.useState(false);
 
@@ -28,8 +30,8 @@ const SignUpCover = props => {
   return (
     <>
       <Svg
-        width={Dimensions.get('window').width * 1.55}
-        height={Dimensions.get('window').height * 0.4}
+        width={dim.width * 1.55}
+        height={dim.height * 0.4}
         viewBox="0 0 52.917 26.458"
         xmlns="http://www.w3.org/2000/svg"
         {...props}>
@@ -81,7 +83,7 @@ const styles = StyleSheet.create({
     fontSize: 36,
     color: 'white',
     position: 'absolute',
-    marginTop: '32%',
+    marginTop: dim.height * 0.3,
   },
   headingSmall: {
     fontFamily: 'Raleway-Bold',
@@ -90,7 +92,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     color: 'white',
     position: 'absolute',
-    marginTop: '17%',
+    marginTop: dim.height * 0.17,
   },
 });
 
