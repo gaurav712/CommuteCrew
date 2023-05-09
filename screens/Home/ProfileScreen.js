@@ -4,7 +4,9 @@ import {StyleSheet, View, Image, Text, TouchableOpacity} from 'react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 export default function ProfileScreen() {
-  const [profilePic, setProfilePic] = useState(require('../avatar.png'));
+  const [profilePic, setProfilePic] = useState(
+    require('../../assets/avatar.png'),
+  );
   const [name, setName] = useState('Pushparaj singh');
   const [bio, setBio] = useState('Avid traveler and foodie');
   const [personalDetails, setPersonalDetails] = useState({

@@ -21,7 +21,7 @@ export default function SearchScreen() {
   return (
     <View style={{flex: 1, backgroundColor: '#D1C4E9'}}>
       <ImageBackground
-        source={require('../2.png')}
+        source={require('../../assets/2.jpg')}
         style={{
           height: '70%', // set the height to half of the screen
           width: '100%',
