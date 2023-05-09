@@ -75,7 +75,7 @@ const AuthNavigator = () => {
 
 export default function App() {
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <>
       <StatusBar barStyle={'dark-content'} backgroundColor={'white'} />
       <NavigationContainer>
         <RootStack.Navigator>
@@ -91,6 +91,6 @@ export default function App() {
           />
         </RootStack.Navigator>
       </NavigationContainer>
-    </SafeAreaView>
+    </>
   );
 }
