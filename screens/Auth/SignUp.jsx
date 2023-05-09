@@ -1,5 +1,6 @@
-import {StatusBar, StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StatusBar, StyleSheet, View} from 'react-native';
 import BackButton from '../../components/BackButton';
+import InputField from '../../components/InputField';
 import SignUpCover from '../../components/SignUpCover';
 
 const SignUp = ({navigation}) => {
@@ -9,10 +10,19 @@ const SignUp = ({navigation}) => {
       <View style={styles.coverContainer}>
         <SignUpCover />
       </View>
+      <ScrollView contentContainerStyle={styles.contentContainer}>
+        <InputField label={'Your Name'} placeholder={'Enter your name'} />
+        <InputField
+          label={'Mobile'}
+          placeholder={'Enter your phone number'}
+          keyboardType={'numeric'}
+        />
+        <InputField
+          label={'License No'}
+          placeholder={'Enter your license number'}
+        />
+      </ScrollView>
       <BackButton onPress={() => navigation.goBack()} />
-      <View style={styles.contentContainer}>
-        <Text>SignUp Screen</Text>
-      </View>
     </View>
   );
 };
@@ -20,22 +30,26 @@ const SignUp = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: 'red',
   },
   coverContainer: {
     position: 'absolute',
-    top: -25,
+    top: -10,
     right: 0,
-    left: 0,
-    bottom: '70%',
+    left: -10,
   },
   contentContainer: {
-    position: 'absolute',
+    paddingVertical: 20,
     left: 0,
     right: 0,
     bottom: 0,
-    top: '30%',
-    marginTop: -25,
+    flex: 0.6,
+    top: '40%',
+    marginTop: -40,
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
   },
 });
 
