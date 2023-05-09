@@ -9,6 +9,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Login from './screens/Auth/Login';
+import {SafeAreaView, StatusBar} from 'react-native';
 
 const RootStack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
@@ -62,19 +63,22 @@ const AuthNavigator = () => {
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <RootStack.Navigator>
-        <RootStack.Screen
-          name="AuthStack"
-          component={AuthNavigator}
-          options={{headerShown: false}}
-        />
-        <RootStack.Screen
-          name="HomeStack"
-          component={HomeNavigator}
-          options={{headerShown: false}}
-        />
-      </RootStack.Navigator>
-    </NavigationContainer>
+    <SafeAreaView style={{flex: 1}}>
+      <StatusBar barStyle={'dark-content'} backgroundColor={'white'} />
+      <NavigationContainer>
+        <RootStack.Navigator>
+          <RootStack.Screen
+            name="AuthStack"
+            component={AuthNavigator}
+            options={{headerShown: false}}
+          />
+          <RootStack.Screen
+            name="HomeStack"
+            component={HomeNavigator}
+            options={{headerShown: false}}
+          />
+        </RootStack.Navigator>
+      </NavigationContainer>
+    </SafeAreaView>
   );
 }
