@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     fontSize: 36,
     color: 'white',
     position: 'absolute',
-    marginTop: dim.height * 0.3,
+    marginTop: dim.height * 0.28,
   },
   headingSmall: {
     fontFamily: 'Raleway-Bold',
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     color: 'white',
     position: 'absolute',
-    marginTop: dim.height * 0.17,
+    marginTop: dim.height * 0.15,
   },
 });
 
