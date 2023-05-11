@@ -1,9 +1,14 @@
 import {ScrollView, StatusBar, StyleSheet, View} from 'react-native';
 import BackButton from '../../components/BackButton';
+import FloatingActionButton from '../../components/FloatingActionButton';
 import InputField from '../../components/InputField';
 import SignUpCover from '../../components/SignUpCover';
 
 const SignUp = ({navigation}) => {
+  const handleSubmit = () => {
+    navigation.replace('HomeStack');
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle={'light-content'} backgroundColor={'#222c39'} />
@@ -23,6 +28,7 @@ const SignUp = ({navigation}) => {
         />
       </ScrollView>
       <BackButton onPress={() => navigation.goBack()} />
+      <FloatingActionButton onPress={handleSubmit} />
     </View>
   );
 };
