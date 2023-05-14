@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     minWidth: '85%',
     fontSize: 16,
     height: 50,
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
     borderRadius: 15,
     fontFamily: 'Raleway-Regular',
   },
