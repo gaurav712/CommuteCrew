@@ -1,10 +1,14 @@
-import {Pressable, StyleSheet} from 'react-native';
+import {ActivityIndicator, Pressable, StyleSheet} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const FloatingActionButton = ({onPress}) => {
+const FloatingActionButton = ({onPress = () => {}, loading = false}) => {
   return (
-    <Pressable style={styles.container} onPress={onPress}>
-      <Ionicons name="arrow-forward" size={35} color="#000000" />
+    <Pressable style={styles.container} onPress={onPress} disabled={loading}>
+      {loading ? (
+        <ActivityIndicator color={'#000000'} size={30} />
+      ) : (
+        <Ionicons name="arrow-forward" size={35} color="#000000" />
+      )}
     </Pressable>
   );
 };
