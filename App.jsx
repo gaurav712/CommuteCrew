@@ -36,7 +36,7 @@ const HomeNavigator = () => {
         tabBarIcon: ({color, size}) => {
           let iconName;
 
-          if (route.name === 'Plan') {
+          if (route.name === 'Plan Journey') {
             iconName = 'route';
           } else if (route.name === 'History') {
             iconName = 'car';
@@ -50,7 +50,7 @@ const HomeNavigator = () => {
         tabBarInactiveTintColor: '#78909C',
         headerShown: false,
       })}>
-      <Tab.Screen name="PlanJourneyStack" component={PlanStack} />
+      <Tab.Screen name="Plan Journey" component={PlanStack} />
       <Tab.Screen name="History" component={YourRidesScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
