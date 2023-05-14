@@ -11,12 +11,18 @@ import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import MapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 import axios from 'axios';
 import DatePicker from 'react-native-date-picker';
+import {getUniqueId} from 'react-native-device-info';
+import InputSpinner from 'react-native-input-spinner';
 import {API_URL} from '../../../constants';
 import NavigationContext from '../../../contexts/NavigationContext';
+import FloatingActionButton from '../../../components/FloatingActionButton';
 
 const MapScreen = () => {
   const [loading, setLoading] = useState(true);
   const [userRoute, setUserRoute] = useState([]);
+  const [journeyDate, setJourneyDate] = useState(new Date());
+  const [dateEntered, setDateEntered] = useState(false);
+  const [seatsAvailable, setSeatsAvailable] = useState(1);
 
   const [mapRegion, setMapRegion] = useState({
     latitude: 26.83928,
@@ -103,6 +109,10 @@ const MapScreen = () => {
     [],
   );
 
+  const handleSubmitOwner = async () => {
+    console.log(await getUniqueId());
+  };
+
   return (
     <>
       {loading ? (
@@ -158,14 +168,44 @@ const MapScreen = () => {
             )}
             {navigationContext.navigationData.userType === 'Owner' && (
               <View style={styles.ownerInfoFormContainer}>
-                <Text style={styles.datePickerHeading}>When do you start?</Text>
-                <DatePicker
-                  open={true}
-                  date={new Date()}
-                  onConfirm={date => {
-                    setOpen(false);
-                    setDate(date);
-                  }}
+                {dateEntered ? (
+                  <>
+                    <Text style={styles.datePickerHeading}>
+                      How many seats available?
+                    </Text>
+                    <View style={styles.inputSpinnerContainer}>
+                      <InputSpinner
+                        fontSize={20}
+                        background={'#808080'}
+                        buttonStyle={{
+                          backgroundColor: '#000000',
+                        }}
+                        max={7}
+                        min={1}
+                        step={1}
+                        value={seatsAvailable}
+                        onChange={num => setSeatsAvailable(num)}
+                      />
+                    </View>
+                  </>
+                ) : (
+                  <>
+                    <Text style={styles.datePickerHeading}>
+                      When do you start?
+                    </Text>
+                    <DatePicker
+                      open={true}
+                      date={journeyDate}
+                      onDateChange={date => {
+                        setJourneyDate(date);
+                      }}
+                    />
+                  </>
+                )}
+                <FloatingActionButton
+                  onPress={
+                    dateEntered ? handleSubmitOwner : () => setDateEntered(true)
+                  }
                 />
               </View>
             )}
@@ -210,6 +250,9 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontFamily: 'Raleway-SemiBold',
     marginBottom: 20,
+  },
+  inputSpinnerContainer: {
+    width: '50%',
   },
 });
 

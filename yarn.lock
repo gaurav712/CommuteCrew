@@ -6268,6 +6268,11 @@ react-native-date-picker@^4.2.13:
   dependencies:
     prop-types "^15.8.1"
 
+react-native-device-info@^10.6.0:
+  version "10.6.0"
+  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-10.6.0.tgz#51f1b2ec98abc32747149b0a5b7fb662b44d50e4"
+  integrity sha512-/MmINdojWdw2/9rwYpH/dX+1gFP0o78p8yYPjwxiPhoySSL2rZaNi+Mq9VwC+zFi/yQmJUvHntkKSw2KUc7rFw==
+
 react-native-geocoding@^0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/react-native-geocoding/-/react-native-geocoding-0.5.0.tgz#69748f896047a63d1c3c1d55255f9d67c8e275c2"
@@ -6297,6 +6302,13 @@ react-native-gradle-plugin@^0.71.17:
   version "0.71.18"
   resolved "https://registry.yarnpkg.com/react-native-gradle-plugin/-/react-native-gradle-plugin-0.71.18.tgz#20ef199bc85be32e45bb6cc069ec2e7dcb1a74a6"
   integrity sha512-7F6bD7B8Xsn3JllxcwHhFcsl9aHIig47+3eN4IHFNqfLhZr++3ElDrcqfMzugM+niWbaMi7bJ0kAkAL8eCpdWg==
+
+react-native-input-spinner@^1.8.1:
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/react-native-input-spinner/-/react-native-input-spinner-1.8.1.tgz#1802327a249192c560f58c65a1a857eeef1330c0"
+  integrity sha512-zgqL4HcYG5vYkpHh4ismLb7g6q/EmZjKnp4Mux0KNyvs1QpkTJ4pJGE6EgjO/JgVuIMIMbch9KLQkIYZ6BmwRQ==
+  dependencies:
+    prop-types "^15.7.2"
 
 react-native-maps@^1.7.1:
   version "1.7.1"
