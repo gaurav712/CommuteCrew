@@ -1,21 +1,38 @@
-import React, {
-  useCallback,
-  useRef,
-  useMemo,
-  useState,
-  useEffect,
-  useContext,
-} from 'react';
-import {StyleSheet, View, Text, ActivityIndicator} from 'react-native';
+import React, {useRef, useMemo, useState, useEffect, useContext} from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  ActivityIndicator,
+  Pressable,
+} from 'react-native';
 import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import MapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 import axios from 'axios';
 import DatePicker from 'react-native-date-picker';
 import {getUniqueId} from 'react-native-device-info';
 import InputSpinner from 'react-native-input-spinner';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {API_URL} from '../../../constants';
 import NavigationContext from '../../../contexts/NavigationContext';
 import FloatingActionButton from '../../../components/FloatingActionButton';
+
+const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const months = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
 
 const MapScreen = () => {
   const [loading, setLoading] = useState(true);
@@ -25,6 +42,8 @@ const MapScreen = () => {
   const [seatsAvailable, setSeatsAvailable] = useState(1);
   const [searchRadius, setSearchRadius] = useState(10);
   const [searchRadiusDefined, setSearchRadiusDefined] = useState(false);
+  const [rideList, setRideList] = useState([]);
+  const [fetchingRides, setFetchingRides] = useState(false);
 
   const maxSearchRadius = useRef(10);
 
@@ -95,6 +114,7 @@ const MapScreen = () => {
 
       setLoading(false);
     } catch (e) {
+      setLoading(false);
       console.log(e);
     }
   };
@@ -123,33 +143,104 @@ const MapScreen = () => {
     setMapRegion(region);
   };
 
-  const data = useMemo(
-    () =>
-      Array(50)
-        .fill(0)
-        .map((_, index) => `index-${index}`),
-    [],
-  );
-
   const snapPoints = useMemo(() => ['50%', '5%', '90%'], []);
 
   // render
-  const renderItem = useCallback(
-    ({item}) => (
-      <View style={styles.itemContainer}>
-        <Text>{item}</Text>
+  const renderItem = ({item}) => {
+    const date = new Date(item?.DateAndTime);
+
+    return (
+      <View style={listItemStyles.container}>
+        <View style={listItemStyles.header}>
+          <Text style={listItemStyles.ownerName}>
+            {item?.providerDetailRef?.userName}
+          </Text>
+          <Text style={listItemStyles.date}>{`${
+            weekDays[date.getDay()]
+          }, ${date.getDate()} ${
+            months[date.getMonth()]
+          } @ ${date.getHours()}:${date.getMinutes()}`}</Text>
+        </View>
+        <View style={listItemStyles.seatsContainer}>
+          {item?.avilability &&
+            Array.from(Array(item?.avilability).keys()).map(i => (
+              <MaterialCommunityIcons
+                key={i}
+                name="car-seat"
+                size={20}
+                color="#808080"
+              />
+            ))}
+        </View>
+        <View style={listItemStyles.navigation}>
+          <View style={listItemStyles.navigationItem}>
+            <MaterialCommunityIcons
+              name="navigation"
+              size={25}
+              color={'#808080'}
+              style={listItemStyles.navigationIcon}
+            />
+            <Text style={listItemStyles.navigationItemText}>
+              {item?.source}
+            </Text>
+          </View>
+          <View style={listItemStyles.navigationItem}>
+            <MaterialIcons
+              name="location-pin"
+              size={25}
+              color={'#808080'}
+              style={listItemStyles.navigationIcon}
+            />
+            <Text style={listItemStyles.navigationItemText}>
+              {item?.destination}
+            </Text>
+          </View>
+          <View style={listItemStyles.buttonsContainer}>
+            <Pressable style={listItemStyles.button}>
+              <MaterialIcons
+                name="alt-route"
+                size={25}
+                color={'#808080'}
+                style={listItemStyles.navigationIcon}
+              />
+              <Text style={listItemStyles.buttonText}>Compare</Text>
+            </Pressable>
+            <Pressable style={listItemStyles.button}>
+              <MaterialCommunityIcons
+                name="whatsapp"
+                size={25}
+                color={'#808080'}
+                style={listItemStyles.navigationIcon}
+              />
+              <Text style={listItemStyles.buttonText}>Contact</Text>
+            </Pressable>
+          </View>
+        </View>
       </View>
-    ),
-    [],
-  );
+    );
+  };
 
   const handleSubmitOwner = async () => {
     console.log(await getUniqueId());
   };
 
   const handleSubmitRider = async () => {
-    setSearchRadiusDefined(true);
-    console.log('Fetching list of owners');
+    try {
+      setFetchingRides(true);
+      setSearchRadiusDefined(true);
+      const {source, destination} = navigationContext.navigationData.rider;
+      const {data} = await axios.post(`${API_URL}/getList`, {
+        source,
+        destination,
+        radius: searchRadius * 1000,
+      });
+      console.log(JSON.stringify(data.rideList, null, 2));
+      setRideList(data.rideList);
+      setFetchingRides(false);
+    } catch (e) {
+      setFetchingRides(false);
+      console.log(e);
+    }
   };
 
   return (
@@ -200,12 +291,37 @@ const MapScreen = () => {
             {navigationContext.navigationData.userType === 'Rider' && (
               <>
                 {searchRadiusDefined ? (
-                  <BottomSheetFlatList
-                    data={data}
-                    keyExtractor={i => i}
-                    renderItem={renderItem}
-                    contentContainerStyle={styles.contentContainer}
-                  />
+                  <>
+                    {fetchingRides ? (
+                      <>
+                        <ActivityIndicator
+                          size={50}
+                          color="#000000"
+                          style={styles.bottomSheetLoadingSpinner}
+                        />
+                        <Text style={styles.loadingText}>
+                          Fetching Rides for you
+                        </Text>
+                      </>
+                    ) : (
+                      <>
+                        {rideList && rideList?.length ? (
+                          <BottomSheetFlatList
+                            data={rideList}
+                            keyExtractor={item => item?._id}
+                            renderItem={renderItem}
+                            contentContainerStyle={styles.contentContainer}
+                          />
+                        ) : (
+                          <View style={styles.noRidesContainer}>
+                            <Text style={styles.noRidesText}>
+                              Oops! Couldn't fetch any rides for you.
+                            </Text>
+                          </View>
+                        )}
+                      </>
+                    )}
+                  </>
                 ) : (
                   <View style={styles.ownerInfoFormContainer}>
                     <Text style={styles.datePickerHeading}>
@@ -293,6 +409,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginVertical: 20,
     fontFamily: 'Raleway-Regular',
+    textAlign: 'center',
   },
   map: {
     alignSelf: 'stretch',
@@ -300,10 +417,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     backgroundColor: '#ffffff',
-  },
-  itemContainer: {
-    padding: 6,
-    margin: 6,
   },
   ownerInfoFormContainer: {
     minHeight: '50%',
@@ -317,6 +430,86 @@ const styles = StyleSheet.create({
   },
   inputSpinnerContainer: {
     width: '50%',
+  },
+  bottomSheetLoadingSpinner: {
+    marginTop: '20%',
+  },
+  noRidesContainer: {
+    minHeight: '50%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noRidesText: {
+    fontSize: 18,
+    fontFamily: 'Raleway-SemiBold',
+    textAlign: 'center',
+  },
+});
+
+const listItemStyles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    margin: 10,
+    borderRadius: 10,
+    elevation: 5,
+    backgroundColor: '#ffffff',
+  },
+  ownerName: {
+    fontSize: 18,
+    fontFamily: 'Raleway-SemiBold',
+    textTransform: 'capitalize',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  date: {
+    fontFamily: 'Raleway-Regular',
+  },
+  seatsContainer: {
+    flexDirection: 'row',
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  navigation: {
+    marginVertical: 5,
+  },
+  navigationItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 5,
+  },
+  navigationIcon: {
+    marginRight: 10,
+  },
+  navigationItemText: {
+    fontFamily: 'Raleway-Regular',
+    maxWidth: '90%',
+  },
+  buttonsContainer: {
+    marginTop: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  button: {
+    flex: 1,
+    marginHorizontal: '5%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    borderRadius: 5,
+    backgroundColor: '#eeeeee',
+    marginVertical: 5,
+    elevation: 2,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  buttonText: {
+    fontSize: 16,
+    fontFamily: 'Raleway-Regular',
   },
 });
 
