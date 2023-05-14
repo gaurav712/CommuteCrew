@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import {StyleSheet, View, Text, ActivityIndicator} from 'react-native';
 import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
-import MapView, {Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 import axios from 'axios';
 import {API_URL} from '../../../constants';
 import NavigationContext from '../../../contexts/NavigationContext';
@@ -120,6 +120,30 @@ const MapScreen = () => {
               strokeColor="#000"
               strokeWidth={6}
             />
+            {navigationContext?.navigationData.rider?.source && (
+              <>
+                <Marker
+                  coordinate={navigationContext.navigationData?.rider.source}
+                />
+                <Marker
+                  coordinate={
+                    navigationContext.navigationData?.rider.destination
+                  }
+                />
+              </>
+            )}
+            {navigationContext?.navigationData.owner?.source && (
+              <>
+                <Marker
+                  coordinate={navigationContext.navigationData?.owner.source}
+                />
+                <Marker
+                  coordinate={
+                    navigationContext.navigationData?.owner.destination
+                  }
+                />
+              </>
+            )}
           </MapView>
 
           <BottomSheet ref={sheetRef} snapPoints={snapPoints}>
