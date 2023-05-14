@@ -1,6 +1,5 @@
 import React from 'react';
 import SearchScreen from './screens/Home/SearchScreen';
-import PublishScreen from './screens/Home/PublishScreen';
 import YourRidesScreen from './screens/Home/YourRidesScreen';
 import ProfileScreen from './screens/Home/ProfileScreen';
 import {NavigationContainer} from '@react-navigation/native';
@@ -43,7 +42,6 @@ const HomeNavigator = () => {
         headerShown: false,
       })}>
       <Tab.Screen name="Search" component={SearchScreen} />
-      <Tab.Screen name="Publish" component={PublishScreen} />
       <Tab.Screen name="Your ride" component={YourRidesScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
