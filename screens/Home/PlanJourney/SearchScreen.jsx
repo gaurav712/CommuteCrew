@@ -10,10 +10,10 @@ import {
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import SearchBackgroundImg from '../../assets/search-bg.jpg';
-import PlacesInputField from '../../components/PlaceInputField';
-import FloatingActionButton from '../../components/FloatingActionButton';
-import UserTypeSelector from '../../components/UserTypeSelector';
+import SearchBackgroundImg from '../../../assets/search-bg.jpg';
+import PlacesInputField from '../../../components/PlaceInputField';
+import FloatingActionButton from '../../../components/FloatingActionButton';
+import UserTypeSelector from '../../../components/UserTypeSelector';
 
 const viewportWidth = Dimensions.get('window').width;
 

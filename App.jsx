@@ -1,5 +1,5 @@
 import React from 'react';
-import SearchScreen from './screens/Home/SearchScreen';
+import SearchScreen from './screens/Home/PlanJourney/SearchScreen';
 import YourRidesScreen from './screens/Home/YourRidesScreen';
 import ProfileScreen from './screens/Home/ProfileScreen';
 import {NavigationContainer} from '@react-navigation/native';
@@ -13,7 +13,20 @@ import {StatusBar} from 'react-native';
 
 const RootStack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
+const PlanJourneyStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+
+const PlanStack = () => {
+  return (
+    <PlanJourneyStack.Navigator>
+      <PlanJourneyStack.Screen
+        name="Plan"
+        component={SearchScreen}
+        options={{headerShown: false}}
+      />
+    </PlanJourneyStack.Navigator>
+  );
+};
 
 const HomeNavigator = () => {
   return (
@@ -37,7 +50,7 @@ const HomeNavigator = () => {
         tabBarInactiveTintColor: '#78909C',
         headerShown: false,
       })}>
-      <Tab.Screen name="Plan" component={SearchScreen} />
+      <Tab.Screen name="PlanJourneyStack" component={PlanStack} />
       <Tab.Screen name="History" component={YourRidesScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
