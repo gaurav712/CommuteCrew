@@ -47,7 +47,7 @@ const HomeNavigator = () => {
 
           if (route.name === 'Plan Journey') {
             iconName = 'route';
-          } else if (route.name === 'History') {
+          } else if (route.name === 'My Rides') {
             iconName = 'car';
           } else if (route.name === 'Profile') {
             iconName = 'user';
@@ -60,7 +60,7 @@ const HomeNavigator = () => {
         headerShown: false,
       })}>
       <Tab.Screen name="Plan Journey" component={PlanStack} />
-      <Tab.Screen name="History" component={YourRidesScreen} />
+      <Tab.Screen name="My Rides" component={YourRidesScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
