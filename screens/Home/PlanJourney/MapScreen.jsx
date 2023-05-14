@@ -144,7 +144,7 @@ const MapScreen = () => {
     setMapRegion(region);
   };
 
-  const snapPoints = useMemo(() => ['50%', '5%', '90%'], []);
+  const snapPoints = useMemo(() => ['50%', '5%', '85%'], []);
 
   // render
   const renderItem = ({item}) => {
@@ -408,6 +408,19 @@ const MapScreen = () => {
           </BottomSheet>
         </View>
       )}
+      {navigationContext.navigationData.userType === 'Rider' &&
+        searchRadiusDefined && (
+          <View style={styles.referenceOverlay}>
+            <View style={styles.referenceOverlayItem}>
+              <View style={[styles.marker, {backgroundColor: '#000000'}]} />
+              <Text style={styles.markerText}>You</Text>
+            </View>
+            <View style={styles.referenceOverlayItem}>
+              <View style={[styles.marker, {backgroundColor: '#ffa500'}]} />
+              <Text style={styles.markerText}>Provider</Text>
+            </View>
+          </View>
+        )}
     </>
   );
 };
@@ -459,6 +472,30 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'Raleway-SemiBold',
     textAlign: 'center',
+  },
+  referenceOverlay: {
+    position: 'absolute',
+    left: 5,
+    top: 5,
+    padding: 10,
+    backgroundColor: '#ffffff',
+    elevation: 5,
+    borderRadius: 10,
+  },
+  referenceOverlayItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  marker: {
+    height: 14,
+    width: 14,
+    borderRadius: 7,
+    marginRight: 10,
+    marginBottom: -2,
+  },
+  markerText: {
+    fontSize: 16,
+    fontFamily: 'Raleway-SemiBold',
   },
 });
 
