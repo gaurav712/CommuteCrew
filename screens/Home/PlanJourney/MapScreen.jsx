@@ -37,6 +37,7 @@ const months = [
 const MapScreen = () => {
   const [loading, setLoading] = useState(true);
   const [userRoute, setUserRoute] = useState([]);
+  const [ownerRoute, setOwnerRoute] = useState([]);
   const [journeyDate, setJourneyDate] = useState(new Date());
   const [dateEntered, setDateEntered] = useState(false);
   const [seatsAvailable, setSeatsAvailable] = useState(1);
@@ -196,7 +197,15 @@ const MapScreen = () => {
             </Text>
           </View>
           <View style={listItemStyles.buttonsContainer}>
-            <Pressable style={listItemStyles.button}>
+            <Pressable
+              style={listItemStyles.button}
+              onPress={() => {
+                setOwnerRoute(
+                  item?.location?.coordinates.map(item => {
+                    return {latitude: item[1], longitude: item[0]};
+                  }),
+                );
+              }}>
               <MaterialIcons
                 name="alt-route"
                 size={25}
@@ -261,6 +270,13 @@ const MapScreen = () => {
               strokeColor="#000"
               strokeWidth={6}
             />
+            {ownerRoute && ownerRoute.length ? (
+              <Polyline
+                coordinates={ownerRoute}
+                strokeColor="#ffa500"
+                strokeWidth={6}
+              />
+            ) : null}
             {navigationContext?.navigationData.rider?.source && (
               <>
                 <Marker
