@@ -105,6 +105,7 @@ export default function App() {
   const [userData, setUserData] = useState({
     contactNumber: 0,
     userName: '',
+    license: '',
   });
 
   return (
