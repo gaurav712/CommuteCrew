@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {
   Dimensions,
   Image,
@@ -10,20 +10,26 @@ import {
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import Geocoder from 'react-native-geocoding';
 import SearchBackgroundImg from '../../../assets/search-bg.jpg';
 import PlacesInputField from '../../../components/PlaceInputField';
 import FloatingActionButton from '../../../components/FloatingActionButton';
 import UserTypeSelector from '../../../components/UserTypeSelector';
+import NavigationContext from '../../../contexts/NavigationContext';
 
 const viewportWidth = Dimensions.get('window').width;
 
 const SearchScreen = ({navigation}) => {
+  Geocoder.init('AIzaSyBefV0iljWcdxXDQ9rxhPkjrv-eXFR6pHk');
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [source, setSource] = useState('');
   const [destination, setDestination] = useState('');
   const [sourceFilled, setSourceFilled] = useState(false);
   const [destinationFilled, setDestinationFilled] = useState(false);
   const [userType, setUserType] = useState('Rider');
+  const [loading, setLoading] = useState(false);
+
+  const navigationContext = useContext(NavigationContext);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -44,6 +50,55 @@ const SearchScreen = ({navigation}) => {
       keyboardDidShowListener.remove();
     };
   }, []);
+
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+
+      const from = (await Geocoder.from(source)).results[0].geometry.location;
+      const to = (await Geocoder.from(destination)).results[0].geometry
+        .location;
+
+      if (userType === 'Rider') {
+        navigationContext.setNavigationData({
+          userType,
+          rider: {
+            source: {
+              latitude: from.lat,
+              longitude: from.lng,
+            },
+            destination: {
+              latitude: to.lat,
+              longitude: to.lng,
+            },
+          },
+        });
+      } else {
+        navigationContext.setNavigationData({
+          userType,
+          owner: {
+            source: {
+              latitude: from.lat,
+              longitude: from.lng,
+            },
+            destination: {
+              latitude: to.lat,
+              longitude: to.lng,
+            },
+          },
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    if (navigationContext.navigationData.userType) {
+      setLoading(false);
+      navigation.navigate('MapScreen');
+    }
+  }, [navigationContext.navigationData]);
 
   return (
     <View style={styles.container}>
@@ -131,9 +186,7 @@ const SearchScreen = ({navigation}) => {
               />
             </View>
             <UserTypeSelector value={userType} onChange={setUserType} />
-            <FloatingActionButton
-              onPress={() => navigation.navigate('MapScreen')}
-            />
+            <FloatingActionButton onPress={handleSubmit} loading={loading} />
           </>
         )}
       </View>

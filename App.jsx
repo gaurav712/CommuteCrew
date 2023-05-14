@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import SearchScreen from './screens/Home/PlanJourney/SearchScreen';
 import YourRidesScreen from './screens/Home/YourRidesScreen';
 import ProfileScreen from './screens/Home/ProfileScreen';
@@ -11,6 +11,8 @@ import Login from './screens/Auth/Login';
 import SignUp from './screens/Auth/SignUp';
 import {StatusBar} from 'react-native';
 import MapScreen from './screens/Home/PlanJourney/MapScreen';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import NavigationContext from './contexts/NavigationContext';
 
 const RootStack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
@@ -86,23 +88,38 @@ const AuthNavigator = () => {
 };
 
 export default function App() {
+  const [navigationData, setNavigationData] = useState({
+    loading: false,
+    userType: '',
+    rider: {
+      source: '',
+      destination: '',
+    },
+    owner: {
+      source: '',
+      destination: '',
+    },
+  });
+
   return (
-    <>
+    <GestureHandlerRootView style={{flex: 1}}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'white'} />
-      <NavigationContainer>
-        <RootStack.Navigator>
-          <RootStack.Screen
-            name="AuthStack"
-            component={AuthNavigator}
-            options={{headerShown: false}}
-          />
-          <RootStack.Screen
-            name="HomeStack"
-            component={HomeNavigator}
-            options={{headerShown: false}}
-          />
-        </RootStack.Navigator>
-      </NavigationContainer>
-    </>
+      <NavigationContext.Provider value={{navigationData, setNavigationData}}>
+        <NavigationContainer>
+          <RootStack.Navigator>
+            <RootStack.Screen
+              name="AuthStack"
+              component={AuthNavigator}
+              options={{headerShown: false}}
+            />
+            <RootStack.Screen
+              name="HomeStack"
+              component={HomeNavigator}
+              options={{headerShown: false}}
+            />
+          </RootStack.Navigator>
+        </NavigationContainer>
+      </NavigationContext.Provider>
+    </GestureHandlerRootView>
   );
 }
