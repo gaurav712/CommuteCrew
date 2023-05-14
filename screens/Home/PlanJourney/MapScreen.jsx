@@ -10,6 +10,7 @@ import {StyleSheet, View, Text, ActivityIndicator} from 'react-native';
 import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import MapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 import axios from 'axios';
+import DatePicker from 'react-native-date-picker';
 import {API_URL} from '../../../constants';
 import NavigationContext from '../../../contexts/NavigationContext';
 
@@ -90,7 +91,7 @@ const MapScreen = () => {
     [],
   );
 
-  const snapPoints = useMemo(() => ['40%', '5%', '90%'], []);
+  const snapPoints = useMemo(() => ['50%', '5%', '90%'], []);
 
   // render
   const renderItem = useCallback(
@@ -147,12 +148,27 @@ const MapScreen = () => {
           </MapView>
 
           <BottomSheet ref={sheetRef} snapPoints={snapPoints}>
-            <BottomSheetFlatList
-              data={data}
-              keyExtractor={i => i}
-              renderItem={renderItem}
-              contentContainerStyle={styles.contentContainer}
-            />
+            {navigationContext.navigationData.userType === 'Rider' && (
+              <BottomSheetFlatList
+                data={data}
+                keyExtractor={i => i}
+                renderItem={renderItem}
+                contentContainerStyle={styles.contentContainer}
+              />
+            )}
+            {navigationContext.navigationData.userType === 'Owner' && (
+              <View style={styles.ownerInfoFormContainer}>
+                <Text style={styles.datePickerHeading}>When do you start?</Text>
+                <DatePicker
+                  open={true}
+                  date={new Date()}
+                  onConfirm={date => {
+                    setOpen(false);
+                    setDate(date);
+                  }}
+                />
+              </View>
+            )}
           </BottomSheet>
         </View>
       )}
@@ -184,6 +200,16 @@ const styles = StyleSheet.create({
   itemContainer: {
     padding: 6,
     margin: 6,
+  },
+  ownerInfoFormContainer: {
+    minHeight: '50%',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+  },
+  datePickerHeading: {
+    fontSize: 24,
+    fontFamily: 'Raleway-SemiBold',
+    marginBottom: 20,
   },
 });
 
