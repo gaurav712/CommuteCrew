@@ -241,6 +241,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     fontFamily: 'Raleway-SemiBold',
     marginLeft: 10,
+    maxWidth: '90%',
   },
 });
 
