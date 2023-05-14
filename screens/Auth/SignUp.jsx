@@ -1,13 +1,57 @@
-import {ScrollView, StatusBar, StyleSheet, View} from 'react-native';
+import {useContext, useEffect, useState} from 'react';
+import {
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  ToastAndroid,
+  View,
+} from 'react-native';
+import {getUniqueId} from 'react-native-device-info';
+import axios from 'axios';
+import {API_URL} from '../../constants';
 import BackButton from '../../components/BackButton';
 import FloatingActionButton from '../../components/FloatingActionButton';
 import InputField from '../../components/InputField';
 import SignUpCover from '../../components/SignUpCover';
+import UserContext from '../../contexts/UserContext';
 
 const SignUp = ({navigation}) => {
-  const handleSubmit = () => {
-    navigation.replace('HomeStack');
+  const [name, setName] = useState('');
+  const [mobile, setMobile] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const userContext = useContext(UserContext);
+
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      const deviceId = await getUniqueId();
+
+      await axios.post(`${API_URL}/auth/user/create`, {
+        deviceId,
+        userName: name,
+        contactNumber: mobile,
+      });
+
+      userContext.setUserData({
+        deviceId,
+        userName: name,
+        contactNumber: mobile,
+      });
+
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      console.log(e);
+    }
   };
+
+  useEffect(() => {
+    if (userContext.userData.userName) {
+      ToastAndroid.show('Account Succesfully Created!', ToastAndroid.LONG);
+      navigation.replace('HomeStack');
+    }
+  }, [userContext.userData.userName]);
 
   return (
     <View style={styles.container}>
@@ -16,19 +60,22 @@ const SignUp = ({navigation}) => {
         <SignUpCover />
       </View>
       <ScrollView contentContainerStyle={styles.contentContainer}>
-        <InputField label={'Your Name'} placeholder={'Enter your name'} />
+        <InputField
+          label={'Your Name'}
+          placeholder={'Enter your name'}
+          value={name}
+          onChangeText={setName}
+        />
         <InputField
           label={'Mobile'}
           placeholder={'Enter your phone number'}
           keyboardType={'numeric'}
-        />
-        <InputField
-          label={'License No'}
-          placeholder={'Enter your license number'}
+          value={mobile}
+          onChangeText={setMobile}
         />
       </ScrollView>
       <BackButton onPress={() => navigation.goBack()} />
-      <FloatingActionButton onPress={handleSubmit} />
+      <FloatingActionButton onPress={handleSubmit} loading={loading} />
     </View>
   );
 };

@@ -13,6 +13,7 @@ import {StatusBar} from 'react-native';
 import MapScreen from './screens/Home/PlanJourney/MapScreen';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import NavigationContext from './contexts/NavigationContext';
+import UserContext from './contexts/UserContext';
 
 const RootStack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
@@ -101,24 +102,31 @@ export default function App() {
     },
   });
 
+  const [userData, setUserData] = useState({
+    contactNumber: 0,
+    userName: '',
+  });
+
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'white'} />
       <NavigationContext.Provider value={{navigationData, setNavigationData}}>
-        <NavigationContainer>
-          <RootStack.Navigator>
-            <RootStack.Screen
-              name="AuthStack"
-              component={AuthNavigator}
-              options={{headerShown: false}}
-            />
-            <RootStack.Screen
-              name="HomeStack"
-              component={HomeNavigator}
-              options={{headerShown: false}}
-            />
-          </RootStack.Navigator>
-        </NavigationContainer>
+        <UserContext.Provider value={{userData, setUserData}}>
+          <NavigationContainer>
+            <RootStack.Navigator>
+              <RootStack.Screen
+                name="AuthStack"
+                component={AuthNavigator}
+                options={{headerShown: false}}
+              />
+              <RootStack.Screen
+                name="HomeStack"
+                component={HomeNavigator}
+                options={{headerShown: false}}
+              />
+            </RootStack.Navigator>
+          </NavigationContainer>
+        </UserContext.Provider>
       </NavigationContext.Provider>
     </GestureHandlerRootView>
   );
