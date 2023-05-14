@@ -4,7 +4,7 @@ import YourRidesScreen from './screens/Home/YourRidesScreen';
 import ProfileScreen from './screens/Home/ProfileScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import BaseAuth from './screens/Auth/BaseAuth';
 import Login from './screens/Auth/Login';
@@ -20,27 +20,25 @@ const HomeNavigator = () => {
     <Tab.Navigator
       screenOptions={({route}) => ({
         // eslint-disable-next-line react/no-unstable-nested-components
-        tabBarIcon: ({focused, color, size}) => {
+        tabBarIcon: ({color, size}) => {
           let iconName;
 
-          if (route.name === 'Search') {
-            iconName = focused ? 'search-outline' : 'search-outline';
-          } else if (route.name === 'Your ride') {
-            iconName = focused ? 'car-sport-outline' : 'car-sport-outline';
+          if (route.name === 'Plan') {
+            iconName = 'route';
+          } else if (route.name === 'History') {
+            iconName = 'car';
           } else if (route.name === 'Profile') {
-            iconName = focused
-              ? 'person-circle-outline'
-              : 'person-circle-outline';
+            iconName = 'user';
           }
 
-          return <Ionicons name={iconName} size={size} color={color} />;
+          return <FontAwesome5 name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: '#00B0FF',
         tabBarInactiveTintColor: '#78909C',
         headerShown: false,
       })}>
-      <Tab.Screen name="Search" component={SearchScreen} />
-      <Tab.Screen name="Your ride" component={YourRidesScreen} />
+      <Tab.Screen name="Plan" component={SearchScreen} />
+      <Tab.Screen name="History" component={YourRidesScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
