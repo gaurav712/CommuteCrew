@@ -90,7 +90,7 @@ const MapScreen = () => {
     [],
   );
 
-  const snapPoints = useMemo(() => ['25%', '50%', '90%'], []);
+  const snapPoints = useMemo(() => ['40%', '5%', '90%'], []);
 
   // render
   const renderItem = useCallback(
