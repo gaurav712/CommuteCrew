@@ -1,5 +1,4 @@
 import React from 'react';
-
 import SearchScreen from './screens/Home/SearchScreen';
 import PublishScreen from './screens/Home/PublishScreen';
 import YourRidesScreen from './screens/Home/YourRidesScreen';
