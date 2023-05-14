@@ -25,8 +25,6 @@ const HomeNavigator = () => {
 
           if (route.name === 'Search') {
             iconName = focused ? 'search-outline' : 'search-outline';
-          } else if (route.name === 'Publish') {
-            iconName = focused ? 'add-circle-outline' : 'add-circle-outline';
           } else if (route.name === 'Your ride') {
             iconName = focused ? 'car-sport-outline' : 'car-sport-outline';
           } else if (route.name === 'Profile') {
