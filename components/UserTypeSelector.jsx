@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   },
   label: {
     position: 'absolute',
-    top: -25,
+    top: -30,
     left: 10,
     paddingHorizontal: 5,
     fontSize: 16,
