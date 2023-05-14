@@ -10,7 +10,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import BaseAuth from './screens/Auth/BaseAuth';
 import Login from './screens/Auth/Login';
 import SignUp from './screens/Auth/SignUp';
-import {SafeAreaView, StatusBar} from 'react-native';
+import {StatusBar} from 'react-native';
 
 const RootStack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
