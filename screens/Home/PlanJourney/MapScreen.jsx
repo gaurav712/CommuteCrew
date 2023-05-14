@@ -23,6 +23,42 @@ const MapScreen = () => {
   const [journeyDate, setJourneyDate] = useState(new Date());
   const [dateEntered, setDateEntered] = useState(false);
   const [seatsAvailable, setSeatsAvailable] = useState(1);
+  const [searchRadius, setSearchRadius] = useState(10);
+  const [searchRadiusDefined, setSearchRadiusDefined] = useState(false);
+
+  const maxSearchRadius = useRef(10);
+
+  const navigationContext = useContext(NavigationContext);
+
+  const haversineDistance = (lat1, lon1, lat2, lon2) => {
+    return (
+      6371 *
+      2 *
+      Math.asin(
+        Math.sqrt(
+          Math.pow(Math.sin(((lat2 - lat1) * Math.PI) / 180 / 2), 2) +
+            Math.cos((lat1 * Math.PI) / 180) *
+              Math.cos((lat2 * Math.PI) / 180) *
+              Math.pow(Math.sin(((lon2 - lon1) * Math.PI) / 180 / 2), 2),
+        ),
+      )
+    );
+  };
+
+  /* Calculate search radius if it's rider */
+  useEffect(() => {
+    if (navigationContext.navigationData.userType === 'Rider') {
+      const {source, destination} = navigationContext.navigationData.rider;
+      const distance = haversineDistance(
+        source.latitude,
+        source.longitude,
+        destination.latitude,
+        destination.longitude,
+      );
+      maxSearchRadius.current =
+        parseInt(distance / 2) - (parseInt(distance / 2) % 10);
+    }
+  }, [navigationContext.navigationData.userType]);
 
   const [mapRegion, setMapRegion] = useState({
     latitude: 26.83928,
@@ -32,8 +68,6 @@ const MapScreen = () => {
   });
 
   const sheetRef = useRef(null);
-
-  const navigationContext = useContext(NavigationContext);
 
   useEffect(() => {
     setLoading(true);
@@ -113,6 +147,11 @@ const MapScreen = () => {
     console.log(await getUniqueId());
   };
 
+  const handleSubmitRider = async () => {
+    setSearchRadiusDefined(true);
+    console.log('Fetching list of owners');
+  };
+
   return (
     <>
       {loading ? (
@@ -159,12 +198,37 @@ const MapScreen = () => {
 
           <BottomSheet ref={sheetRef} snapPoints={snapPoints}>
             {navigationContext.navigationData.userType === 'Rider' && (
-              <BottomSheetFlatList
-                data={data}
-                keyExtractor={i => i}
-                renderItem={renderItem}
-                contentContainerStyle={styles.contentContainer}
-              />
+              <>
+                {searchRadiusDefined ? (
+                  <BottomSheetFlatList
+                    data={data}
+                    keyExtractor={i => i}
+                    renderItem={renderItem}
+                    contentContainerStyle={styles.contentContainer}
+                  />
+                ) : (
+                  <View style={styles.ownerInfoFormContainer}>
+                    <Text style={styles.datePickerHeading}>
+                      Search Radius (in KMs)?
+                    </Text>
+                    <View style={styles.inputSpinnerContainer}>
+                      <InputSpinner
+                        fontSize={20}
+                        background={'#808080'}
+                        buttonStyle={{
+                          backgroundColor: '#000000',
+                        }}
+                        max={maxSearchRadius.current}
+                        min={10}
+                        step={10}
+                        value={searchRadius}
+                        onChange={num => setSearchRadius(num)}
+                      />
+                    </View>
+                    <FloatingActionButton onPress={handleSubmitRider} />
+                  </View>
+                )}
+              </>
             )}
             {navigationContext.navigationData.userType === 'Owner' && (
               <View style={styles.ownerInfoFormContainer}>
