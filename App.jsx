@@ -10,6 +10,7 @@ import BaseAuth from './screens/Auth/BaseAuth';
 import Login from './screens/Auth/Login';
 import SignUp from './screens/Auth/SignUp';
 import {StatusBar} from 'react-native';
+import MapScreen from './screens/Home/PlanJourney/MapScreen';
 
 const RootStack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
@@ -22,6 +23,11 @@ const PlanStack = () => {
       <PlanJourneyStack.Screen
         name="Plan"
         component={SearchScreen}
+        options={{headerShown: false}}
+      />
+      <PlanJourneyStack.Screen
+        name="MapScreen"
+        component={MapScreen}
         options={{headerShown: false}}
       />
     </PlanJourneyStack.Navigator>

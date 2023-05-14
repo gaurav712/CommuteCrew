@@ -17,7 +17,7 @@ import UserTypeSelector from '../../../components/UserTypeSelector';
 
 const viewportWidth = Dimensions.get('window').width;
 
-const SearchScreen = () => {
+const SearchScreen = ({navigation}) => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [source, setSource] = useState('');
   const [destination, setDestination] = useState('');
@@ -131,7 +131,9 @@ const SearchScreen = () => {
               />
             </View>
             <UserTypeSelector value={userType} onChange={setUserType} />
-            <FloatingActionButton />
+            <FloatingActionButton
+              onPress={() => navigation.navigate('MapScreen')}
+            />
           </>
         )}
       </View>
