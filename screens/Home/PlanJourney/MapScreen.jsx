@@ -69,11 +69,14 @@ const MapScreen = () => {
     const minLng = Math.min(sourceLng, destLng);
     const maxLng = Math.max(sourceLng, destLng);
 
+    const latitudeDelta = (maxLat - minLat) * 1.5; // Zoom out by 50%
+    const longitudeDelta = (maxLng - minLng) * 1.5; // Zoom out by 50%
+
     const region = {
       latitude: (minLat + maxLat) / 2,
       longitude: (minLng + maxLng) / 2,
-      latitudeDelta: maxLat - minLat + 0.1,
-      longitudeDelta: maxLng - minLng + 0.1,
+      latitudeDelta,
+      longitudeDelta,
     };
 
     setMapRegion(region);
