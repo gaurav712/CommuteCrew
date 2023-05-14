@@ -13,6 +13,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import SearchBackgroundImg from '../../assets/search-bg.jpg';
 import PlacesInputField from '../../components/PlaceInputField';
 import FloatingActionButton from '../../components/FloatingActionButton';
+import UserTypeSelector from '../../components/UserTypeSelector';
 
 const viewportWidth = Dimensions.get('window').width;
 
@@ -22,6 +23,7 @@ const SearchScreen = () => {
   const [destination, setDestination] = useState('');
   const [sourceFilled, setSourceFilled] = useState(false);
   const [destinationFilled, setDestinationFilled] = useState(false);
+  const [userType, setUserType] = useState('Rider');
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -128,6 +130,7 @@ const SearchScreen = () => {
                 }}
               />
             </View>
+            <UserTypeSelector value={userType} onChange={setUserType} />
             <FloatingActionButton />
           </>
         )}
