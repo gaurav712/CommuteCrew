@@ -1,22 +1,51 @@
-import {useEffect, useState} from 'react';
-import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
+import {useContext, useEffect, useState} from 'react';
+import axios from 'axios';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  ToastAndroid,
+  View,
+} from 'react-native';
+import {getUniqueId} from 'react-native-device-info';
+import {API_URL} from '../../constants';
+import UserContext from '../../contexts/UserContext';
 
 const Login = ({navigation}) => {
   const [loading, setLoading] = useState(true);
-  const [authenticated, setAuthenticated] = useState(false);
+
+  const userContext = useContext(UserContext);
 
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-      setAuthenticated(true);
-    }, 1000);
+    setLoading(true);
+    checkAccount();
   }, []);
 
+  const checkAccount = async () => {
+    try {
+      const deviceId = await getUniqueId();
+      const {data} = await axios.get(`${API_URL}/auth/${deviceId}`);
+      if (data?.status !== 'SUCCESS') {
+        ToastAndroid.show(
+          'Account does not exist! Please Register.',
+          ToastAndroid.LONG,
+        );
+        navigation.goBack();
+      } else {
+        userContext.setUserData(data?.user);
+      }
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      console.log(e);
+    }
+  };
+
   useEffect(() => {
-    if (loading === false && authenticated) {
+    if (userContext.userData.userName) {
       navigation.replace('HomeStack');
     }
-  }, [authenticated]);
+  }, [userContext.userData.userName]);
 
   return (
     <View style={styles.container}>

@@ -106,6 +106,7 @@ export default function App() {
     contactNumber: 0,
     userName: '',
     license: '',
+    deviceId: '',
   });
 
   return (
