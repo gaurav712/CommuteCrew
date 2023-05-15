@@ -32,7 +32,10 @@ const Login = ({navigation}) => {
         );
         navigation.goBack();
       } else {
-        userContext.setUserData(data?.user);
+        userContext.setUserData({
+          ...data?.user,
+          usrToken: data?.usrToken,
+        });
       }
       setLoading(false);
     } catch (e) {
