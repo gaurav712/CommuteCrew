@@ -10,13 +10,14 @@ import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import MapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 import axios from 'axios';
 import DatePicker from 'react-native-date-picker';
-import {getUniqueId} from 'react-native-device-info';
 import InputSpinner from 'react-native-input-spinner';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {API_URL} from '../../../constants';
 import NavigationContext from '../../../contexts/NavigationContext';
+import UserContext from '../../../contexts/UserContext';
 import FloatingActionButton from '../../../components/FloatingActionButton';
+import Geocoder from 'react-native-geocoding';
 
 const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const months = [
@@ -35,6 +36,7 @@ const months = [
 ];
 
 const MapScreen = () => {
+  Geocoder.init('AIzaSyBefV0iljWcdxXDQ9rxhPkjrv-eXFR6pHk');
   const [loading, setLoading] = useState(true);
   const [userRoute, setUserRoute] = useState([]);
   const [ownerRoute, setOwnerRoute] = useState([]);
@@ -45,10 +47,12 @@ const MapScreen = () => {
   const [searchRadiusDefined, setSearchRadiusDefined] = useState(false);
   const [rideList, setRideList] = useState([]);
   const [fetchingRides, setFetchingRides] = useState(false);
+  const [ridePublished, setRidePublished] = useState(false);
 
   const maxSearchRadius = useRef(10);
 
   const navigationContext = useContext(NavigationContext);
+  const userContext = useContext(UserContext);
 
   const haversineDistance = (lat1, lon1, lat2, lon2) => {
     return (
@@ -230,7 +234,40 @@ const MapScreen = () => {
   };
 
   const handleSubmitOwner = async () => {
-    console.log(await getUniqueId());
+    try {
+      setFetchingRides(true);
+      const {usrToken} = userContext.userData;
+
+      const from = navigationContext.navigationData.owner?.source;
+      const to = navigationContext.navigationData.owner?.destination;
+
+      const source = (await Geocoder.from(from)).results[0].geometry.location;
+      const destination = (await Geocoder.from(to)).results[0].geometry
+        .location;
+
+      await axios.post(
+        `${API_URL}/publishRide`,
+        {
+          avilability: seatsAvailable,
+          source: {latitude: source.lat, longitude: source.lng},
+          destination: {latitude: destination.lat, longitude: destination.lng},
+          DateAndTime: journeyDate,
+          description: '',
+        },
+        {
+          headers: {
+            'Content-type': 'application/json',
+            Authorization: `Bearer ${usrToken}`,
+          },
+        },
+      );
+
+      setFetchingRides(false);
+      setRidePublished(true);
+    } catch (e) {
+      setFetchingRides(false);
+      console.log(e);
+    }
   };
 
   const handleSubmitRider = async () => {
@@ -364,7 +401,12 @@ const MapScreen = () => {
             )}
             {navigationContext.navigationData.userType === 'Owner' && (
               <View style={styles.ownerInfoFormContainer}>
-                {dateEntered ? (
+                {ridePublished && (
+                  <Text style={styles.datePickerHeading}>
+                    Your ride's been published!
+                  </Text>
+                )}
+                {dateEntered && !ridePublished && (
                   <>
                     <Text style={styles.datePickerHeading}>
                       How many seats available?
@@ -384,7 +426,8 @@ const MapScreen = () => {
                       />
                     </View>
                   </>
-                ) : (
+                )}
+                {!dateEntered && !ridePublished && (
                   <>
                     <Text style={styles.datePickerHeading}>
                       When do you start?
@@ -398,11 +441,16 @@ const MapScreen = () => {
                     />
                   </>
                 )}
-                <FloatingActionButton
-                  onPress={
-                    dateEntered ? handleSubmitOwner : () => setDateEntered(true)
-                  }
-                />
+                {!ridePublished && (
+                  <FloatingActionButton
+                    onPress={
+                      dateEntered
+                        ? handleSubmitOwner
+                        : () => setDateEntered(true)
+                    }
+                    loading={fetchingRides}
+                  />
+                )}
               </View>
             )}
           </BottomSheet>

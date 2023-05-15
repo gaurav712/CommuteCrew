@@ -103,6 +103,7 @@ export default function App() {
   });
 
   const [userData, setUserData] = useState({
+    usrToken: '',
     contactNumber: 0,
     userName: '',
     license: '',
