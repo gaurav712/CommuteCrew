@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import SearchScreen from './screens/Home/PlanJourney/SearchScreen';
 import YourRidesScreen from './screens/Home/YourRidesScreen';
 import ProfileScreen from './screens/Home/ProfileScreen';
@@ -14,6 +14,7 @@ import MapScreen from './screens/Home/PlanJourney/MapScreen';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import NavigationContext from './contexts/NavigationContext';
 import UserContext from './contexts/UserContext';
+import RNBootSplash from 'react-native-bootsplash';
 
 const RootStack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
@@ -109,6 +110,10 @@ export default function App() {
     license: '',
     deviceId: '',
   });
+
+  useEffect(() => {
+    RNBootSplash.hide();
+  }, []);
 
   return (
     <GestureHandlerRootView style={{flex: 1}}>
