@@ -1,7 +1,8 @@
 import {StyleSheet, Text, View} from 'react-native';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+import {API_KEY} from '../constants/secrets';
 
-const GOOGLE_PLACES_API_KEY = 'AIzaSyBefV0iljWcdxXDQ9rxhPkjrv-eXFR6pHk';
+const GOOGLE_PLACES_API_KEY = API_KEY;
 
 const PlacesInputField = ({label, placeholder, onChange = () => {}}) => {
   const renderRow = (data, index) => {

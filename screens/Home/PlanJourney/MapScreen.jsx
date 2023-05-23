@@ -18,6 +18,7 @@ import NavigationContext from '../../../contexts/NavigationContext';
 import UserContext from '../../../contexts/UserContext';
 import FloatingActionButton from '../../../components/FloatingActionButton';
 import Geocoder from 'react-native-geocoding';
+import {API_KEY} from '../../../constants/secrets';
 
 const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const months = [
@@ -36,7 +37,7 @@ const months = [
 ];
 
 const MapScreen = () => {
-  Geocoder.init('AIzaSyBefV0iljWcdxXDQ9rxhPkjrv-eXFR6pHk');
+  Geocoder.init(API_KEY);
   const [loading, setLoading] = useState(true);
   const [userRoute, setUserRoute] = useState([]);
   const [ownerRoute, setOwnerRoute] = useState([]);

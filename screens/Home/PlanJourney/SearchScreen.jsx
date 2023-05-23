@@ -16,11 +16,12 @@ import PlacesInputField from '../../../components/PlaceInputField';
 import FloatingActionButton from '../../../components/FloatingActionButton';
 import UserTypeSelector from '../../../components/UserTypeSelector';
 import NavigationContext from '../../../contexts/NavigationContext';
+import {API_KEY} from '../../../constants/secrets';
 
 const viewportWidth = Dimensions.get('window').width;
 
 const SearchScreen = ({navigation}) => {
-  Geocoder.init('AIzaSyBefV0iljWcdxXDQ9rxhPkjrv-eXFR6pHk');
+  Geocoder.init(API_KEY);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [source, setSource] = useState('');
   const [destination, setDestination] = useState('');
